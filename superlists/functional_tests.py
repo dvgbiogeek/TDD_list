@@ -20,7 +20,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # Notice the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').header_text
+        header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
         # Invite to-do item entries
@@ -39,7 +39,8 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_element_by_tag_name('tr')
         self.assertTrue(
-                any(row.text == '1: Go for a walk' for row in rows)
+                any(row.text == '1: Go for a walk' for row in rows),
+                "New to-do item did not appear in table"
         )
         
         # Still have a text box for entering a new item
