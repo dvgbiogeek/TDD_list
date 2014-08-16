@@ -37,12 +37,11 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_element_by_tag_name('tr')
-        self.assertTrue(
-                any(row.text == '1: Go for a walk' for row in rows),
-                "New to-do item did not appear in table"
-        )
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Go for a walk', [row.text for row in rows])
         
+        import time
+        time.sleep(5)
         # Still have a text box for entering a new item
         self.fail('Finish the test!')
 
