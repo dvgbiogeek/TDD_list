@@ -1,10 +1,11 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     # Startup the browser
     def setUp(self):
@@ -22,7 +23,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrive_it_later(self):
         # Check out homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Notice the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
@@ -50,7 +51,6 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('Pick up groceries for curry')
         inputbox.send_keys(Keys.ENTER)
         
-
         time.sleep(1)
 
         # Update page with first and second item.
