@@ -7,7 +7,7 @@ def home_page(request):
         # .objects.create() creates a new Item without calling .save()
         Item.objects.create(text=request.POST['item_text'])
         return redirect('/')
-    # else:
-    #     new_item_text = ''
 
-    return render(request, 'home.html')
+    items = Item.objects.all()
+
+    return render(request, 'home.html', {'items': items})
