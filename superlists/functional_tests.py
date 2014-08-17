@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
+import time
 
 
 class NewVisitorTest(unittest.TestCase):
@@ -13,6 +14,11 @@ class NewVisitorTest(unittest.TestCase):
     # Shutdown the browser
     def tearDown(self):
         self.browser.quit()
+
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row_text for row in rows])
 
     def test_can_start_a_list_and_retrive_it_later(self):
         # Check out homepage
@@ -35,14 +41,23 @@ class NewVisitorTest(unittest.TestCase):
 
         # Press enter and update the page showing the itemized to-do list
         inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: Go for a walk')
+        time.sleep(1)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Go for a walk', [row.text for row in rows])
+        # Still have a text box for entering a new item.
+        # Add another item.
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Pick up groceries for curry')
+        inputbox.send_keys(Keys.ENTER)
         
-        import time
-        time.sleep(5)
-        # Still have a text box for entering a new item
+
+        time.sleep(1)
+
+        # Update page with first and second item.
+        self.check_for_row_in_list_table('1: Go for a walk')
+        self.check_for_row_in_list_table('2: Pick up groceries for curry')
+        time.sleep(1)
+
         self.fail('Finish the test!')
 
 if __name__ =='__main__':
