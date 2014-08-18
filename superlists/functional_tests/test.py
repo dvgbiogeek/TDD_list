@@ -47,14 +47,14 @@ class NewVisitorTest(LiveServerTestCase):
         user_list_url = self.browser.current_url
         self.assertRegex(user_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Go for a walk')
-        time.sleep(3)
+        # time.sleep(2)
 
         # Still have a text box for entering a new item.
         # Add another item.
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Pick up groceries for curry')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(3)
+        time.sleep(2)
         # Update page with first and second item.
         self.check_for_row_in_list_table('1: Go for a walk')
         self.check_for_row_in_list_table('2: Pick up groceries for curry')
@@ -74,7 +74,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy eggplant')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(3)
+        time.sleep(2)
         # Next user gets their own unique URL
         next_user_list_url = self.browser.current_url
         self.assertRegex(next_user_list_url, '/lists/.+')
@@ -84,8 +84,30 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Go for a walk', page_text)
         self.assertIn('1: Buy eggplant', page_text)
-        time.sleep(3)
+        # time.sleep(3)
         self.fail('Finish the test!')
+
+    def test_layout_and_styling(self):
+        # Go to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # Check that inputbox is centered
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width']/2,
+            512,
+            delta=5
+        )
+
+        # Input is also centered
+        inputbox.send_keys('testing\n')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width']/2,
+            512,
+            delta=5
+        )
 
 if __name__ =='__main__':
     unittest.main(warnings='ignore')
