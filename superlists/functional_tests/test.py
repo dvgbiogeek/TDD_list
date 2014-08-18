@@ -2,7 +2,7 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
-import time
+
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -40,23 +40,48 @@ class NewVisitorTest(LiveServerTestCase):
         # Enter to-do item
         inputbox.send_keys('Go for a walk')
 
-        # Press enter and update the page showing the itemized to-do list
+        # Press enter, redirect to a new URL with the page showing the itemized 
+        # to-do list
         inputbox.send_keys(Keys.ENTER)
+        user_list_url = self.browser.current_url
+        self.assertRegex(user_list_url, '/list/.+')
         self.check_for_row_in_list_table('1: Go for a walk')
-        time.sleep(1)
-
+        
         # Still have a text box for entering a new item.
         # Add another item.
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Pick up groceries for curry')
         inputbox.send_keys(Keys.ENTER)
-        
-        time.sleep(1)
 
         # Update page with first and second item.
         self.check_for_row_in_list_table('1: Go for a walk')
         self.check_for_row_in_list_table('2: Pick up groceries for curry')
-        time.sleep(1)
+
+        # A new user comes to the site
+        # We use a new browser session to make sure no other user's list shows - 
+        # remove cookies
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Go for a walk', page_text)
+        self.assertNotIn('Pick up groceries for curry', page_text)
+
+        # Enter new item
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy eggplant')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Next user gets their own unique URL
+        next_user_list_url = self.browser.current_url
+        self.assertRegex(next_user_list_url, '/list/.+')
+        self.assertNotEqual(next_user_list_url, user_list_url)
+
+        # Check for traces of other user's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Go for a walk', page_text)
+        self.assertIn('1: Buy eggplant', page_text)
 
         self.fail('Finish the test!')
 
