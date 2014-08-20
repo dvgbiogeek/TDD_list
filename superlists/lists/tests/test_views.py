@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
+from unittest import skip
 
 from lists.views import home_page, view_list
 from lists.models import Item, List
@@ -137,6 +138,7 @@ class NewListTest(TestCase):
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
 
+    @skip
     def test_for_invalid_input_renders_home_template(self):
         response = self.client.post('/list/new', data={'text': ''})
         self.assertEqual(response.status_code, 200)
