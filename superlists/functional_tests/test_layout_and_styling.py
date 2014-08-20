@@ -1,9 +1,11 @@
 from .base import FunctionalTest
+from unittest import skip
 import time
 
 
 class LayoutAndStylingTest(FunctionalTest):
 
+    @skip
     def test_layout_and_styling(self):
         # Go to the home page
         self.browser.get(self.server_url)
