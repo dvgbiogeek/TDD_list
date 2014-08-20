@@ -7,7 +7,7 @@ import time
 
 class NewVisitorTest(FunctionalTest):
 
-    @skip
+    # @skip
     def test_can_start_a_list_and_retrive_it_later(self):
         # Check out homepage
         self.browser.get(self.server_url)
