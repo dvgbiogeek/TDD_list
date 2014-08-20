@@ -1,10 +1,10 @@
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 from selenium import webdriver
+
 import sys
 
 
 class FunctionalTest(StaticLiveServerCase):
-
     @classmethod
     def setUpClass(cls):
         for arg in sys.argv:
@@ -33,7 +33,8 @@ class FunctionalTest(StaticLiveServerCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row_text for row in rows])
 
+    def get_item_input_box(self):
+        return self.browser.find_element_by_id('id_text')
 
 if __name__ =='__main__':
     unittest.main(warnings='ignore')
-

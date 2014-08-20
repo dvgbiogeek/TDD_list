@@ -17,7 +17,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('To-Do', header_text)
 
         # Invite to-do item entries
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
                 'Enter a to-do item'
@@ -37,7 +37,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Still have a text box for entering a new item.
         # Add another item.
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Pick up groceries for curry')
         inputbox.send_keys(Keys.ENTER)
         # time.sleep(2)
@@ -57,7 +57,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('Pick up groceries for curry', page_text)
 
         # Enter new item
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Buy eggplant')
         inputbox.send_keys(Keys.ENTER)
         # time.sleep(2)
