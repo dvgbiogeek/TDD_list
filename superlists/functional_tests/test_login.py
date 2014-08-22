@@ -25,7 +25,11 @@ class LoginTest(FunctionalTest):
     def test_login_with_persona(self):
         # Check for login link
         self.browser.get(self.server_url)
+<<<<<<< HEAD
         self.browser.find_element_by_id('id_login').click()
+=======
+        self.browser.find_element_by_id('login').click()
+>>>>>>> FETCH_HEAD
 
         # A Persona login box appears
         self.switch_to_new_window('Mozilla Persona')
@@ -40,7 +44,11 @@ class LoginTest(FunctionalTest):
         self.switch_to_new_window('To-Do')
 
         # User is now logged in
+<<<<<<< HEAD
         self.wait_for_element_with_id('id_logout')
+=======
+        self.wait_for_element_with_id('logout')
+>>>>>>> FETCH_HEAD
         navbar = self.browser.find_element_by_css_selector('.navbar')
         self.assertIn('edith@mockmyid.com', navbar.text)
         time.sleep(2)
