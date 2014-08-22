@@ -16,7 +16,7 @@
             <p>Logged in as {{ user.email }}</p>
             <p><a id="logout" href="{% url 'logout' %}">Sign out</a></p>
         {% else %}
-            <a id="login" href="#">Sign in</a>
+            <a href="#" id="login">Sign in</a>
         {% endif %}
         <p>User: {{ user }}</p>
     </div>

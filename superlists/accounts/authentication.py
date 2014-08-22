@@ -2,21 +2,26 @@ import requests
 import sys
 from accounts.models import ListUser
 
+DOMAIN = 'localhost'
+
+
 class PersonaAuthenticationBackend(object):
     
-    def authenticate(self):
+    def authenticate(self, assertion):
         # Send the assertion to Mozilla's verifier service.
-        data = {'assertion': assertion, 'audience': 'localhost'}
+        data = {'assertion': assertion, 'audience': DOMAIN}
         print('sending to mozilla', data, file=sys.stderr)
-        resp = requests.post('http://verifier.login.persona.org/verify', data=data)
+        resp = requests.post('https://verifier.login.persona.org/verify', data=data)
         print('got', resp.content, file=sys.stderr)
 
         # Did the verifier respond?
         if resp.ok:
             # Parse the response
             verification_data = resp.json()
+            
+            # Check if the assertion was valid
             if verification_data['status'] =='okay':
-                email.verification_data['email']
+                email = verification_data['email']
                 try:
                     return self.get_user(email)
                 except ListUser.DoesNotExist:
