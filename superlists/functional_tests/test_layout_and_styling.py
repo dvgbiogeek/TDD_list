@@ -5,11 +5,11 @@ import time
 
 class LayoutAndStylingTest(FunctionalTest):
 
-    @skip
     def test_layout_and_styling(self):
         # Go to the home page
         self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
+        time.sleep(2)
 
         # Check that inputbox is centered
         inputbox = self.get_item_input_box()
