@@ -28,9 +28,9 @@ test("initialize binds sign in button to navigator.id.request", function() {
             watch: function () {}
         }
     };
-
     Superlists.Accounts.initialize(mockNavigator); 
     equal(requestWasCalled, false, 'check request not called before click');
+    
     $('#id_login').trigger('click');
     equal(requestWasCalled, true, 'check request called after click');
 });
@@ -47,7 +47,7 @@ module("navigator.id.watch tests", {
             }
         };
         xhr = sinon.useFakeXMLHttpRequest();
-        request = [];
+        requests = [];
         xhr.onCreate = function (request) { requests.push(request); };
     },
     teardown: function() {
@@ -69,6 +69,27 @@ test("watch sees current user", function () {
     Superlists.Accounts.initialize(mockNavigator, user, token, urls);
     var watchCallArgs = mockNavigator.id.watch.firstCall.args[0];
     equal(watchCallArgs.loggedInUser, user, 'check user')
+});
+
+test("onlogin does ajax post to login url", function () {
+    Superlists.Accounts.initialize(mockNavigator, user, token, urls);
+    var onloginCallback = mockNavigator.id.watch.firstCall.args[0].onlogin;
+    onloginCallback();
+    equal(requests.length, 1, 'check ajax request');
+    equal(requests[0].method, 'POST');
+    equal(requests[0].url, urls.login, 'check url');
+});
+
+test("onlogin sends assertion with csrf token", function () {
+    Superlists.Accounts.initialize(mockNavigator, user, token, urls);
+    var onloginCallback = mockNavigator.id.watch.firstCall.args[0].onlogin;
+    var assertion = 'browser-id assertion';
+    onloginCallback(assertion);
+    equal(
+        requests[0].requestBody,
+        $.param({ assertion: assertion, csrfmiddlewaretoken: token}),
+        'check POST data'
+    );
 });
 
 </script>
