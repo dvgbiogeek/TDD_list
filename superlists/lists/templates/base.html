@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>To-Do lists</title>
-    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/static/base.css" rel="stylesheet" media="screen">
 </head>
@@ -13,7 +13,7 @@
 
     <nav class="navbar navbar-default" role="navigation">
         <a class="navbar-brand" href="/">Superlists</a>
-        <a class="btn navbar-btn navbar-right" id="id_login" href="#">Sign In</a>
+        <a class="btn navbar-btn navbar-right" id="id_login" href="#">Sign in</a>
     </nav>
 
     <div class="row">
@@ -36,21 +36,28 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             {% block table %}
-            {% endblock %}        
+            {% endblock %}
         </div>
-    </div>    
-        
-</div>        
+    </div>
+
+</div>
 <script src="http://code.jquery.com/jquery.min.js"></script>
-<script src="https://login/persona.org/include.js"></script>
-<script src="/static/list.js"></script>
+<script src="https://login.persona.org/include.js"></script>
 <script src="/static/accounts.js"></script>
+<script src="/static/list.js"></script>
 <script>
     /*global $, Superlists, navigator */
-    $(document).ready(function() {
-        Superlists.Accounts.initialize(navigator);
+    $(document).ready(function () {
+        var user = "{{ user.email }}" || null;
+        var token = "{{ csrf_token }}";
+        var urls = {
+            login: "TODO",
+            logout: "TODO",
+        };
+        Superlists.Accounts.initialize(navigator, user, token, urls);
     });
-</script>    
+</script>
 </body>
 
 </html>
+
