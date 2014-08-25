@@ -14,5 +14,9 @@ class PersonaAuthenticationBackend(object):
             PERSONA_VERIFY_URL, 
             data={'assertion': 'an assertion', 'audience': DOMAIN}
         )
-        if response.json()['status'] == 'okay':
-            return User.objects.get(email=response.json()['email'])
+        if response.ok and response.json()['status'] == 'okay':
+            email = response.json()['email']
+            try:
+                return User.objects.get(email=email)
+            except User.DoesNotExist:
+                return User.objects.create(email=email)
