@@ -1,8 +1,8 @@
 import time
-from selenium.webdriver.support.ui import WebDriverWait
 
 from .base import FunctionalTest
 
+TEST_EMAIL = 'edith@mockmyid.com'
 
 class LoginTest(FunctionalTest):
 
@@ -17,24 +17,6 @@ class LoginTest(FunctionalTest):
             time.sleep(0.5)
         self.fail('could not find window')
 
-    def wait_for_element_with_id(self, element_id):
-        WebDriverWait(self.browser, timeout=30).until(
-            lambda b: b.find_element_by_id(element_id),
-            'Could not find element with id {}. Page text was {}'.format(
-                element_id, self.browser.find_element_by_tag_name('body').text
-            )
-        )
-
-    def wait_to_be_logged_in(self):
-        self.wait_for_element_with_id('id_logout')
-        navbar = self.browser.find_element_by_css_selector('.navbar')
-        self.assertIn('edith@mockmyid.com', navbar.text)
-
-    def wait_to_be_logged_out(self):
-        self.wait_for_element_with_id('id_login')
-        navbar = self.browser.find_element_by_css_selector('.navbar')
-        self.assertNotIn('edith@mockmyid.com', navbar.text)
-
     def test_login_with_persona(self):
         # Check for login link
         self.browser.get(self.server_url)
@@ -48,26 +30,26 @@ class LoginTest(FunctionalTest):
         # Login with email address - Use mockmyid.com for test email
         self.browser.find_element_by_id(
             'authentication_email'
-        ).send_keys('edith@mockmyid.com')
+        ).send_keys(TEST_EMAIL)
         self.browser.find_element_by_tag_name('button').click()
 
         # The Persona window closes
         self.switch_to_new_window('To-Do')
 
         # User is now logged in
-        self.wait_to_be_logged_in()
+        self.wait_to_be_logged_in(email=TEST_EMAIL)
         
         # User stays logged in with a page refresh
         self.browser.refresh()
-        self.wait_to_be_logged_in()
+        self.wait_to_be_logged_in(email=TEST_EMAIL)
 
         # Click logout
         self.browser.find_element_by_id('id_logout').click()
-        self.wait_to_be_logged_out()
+        self.wait_to_be_logged_out(email=TEST_EMAIL)
 
         # User still logged out after a refresh
         self.browser.refresh()
-        self.wait_to_be_logged_out()
+        self.wait_to_be_logged_out(email=TEST_EMAIL)
 
 
 
