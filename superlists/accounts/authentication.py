@@ -12,7 +12,7 @@ class PersonaAuthenticationBackend(object):
     def authenticate(self, assertion):
         response = requests.post(
             PERSONA_VERIFY_URL, 
-            data={'assertion': 'an assertion', 'audience': DOMAIN}
+            data={'assertion': assertion, 'audience': DOMAIN}
         )
         if response.ok and response.json()['status'] == 'okay':
             email = response.json()['email']
