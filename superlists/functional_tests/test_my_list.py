@@ -47,7 +47,7 @@ class MyListsTest(FunctionalTest):
         self.browser.find_element_by_link_text('My lists').click()
 
         # Your list is in there, named according to the first item
-        self.browser,find_element_by_link_text('Reticulate splines').click()
+        self.browser.find_element_by_link_text('Reticulate splines').click()
         self.assertEqual(self.browser.current_url, first_list_url)
 
         # You decide to start a new list
