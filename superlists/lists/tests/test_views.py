@@ -171,7 +171,6 @@ class NewListIntegratedTest(TestCase):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertIsInstance(response.context['form'], ItemForm)
 
-    @unittest.skip
     def test_list_owner_is_saved_if_user_is_authenticated(self):
         request = HttpRequest()
         request.user = User.objects.create(email='a@b.com')
@@ -205,12 +204,14 @@ class NewListViewUnitTest(unittest.TestCase):
 
     def test_passes_POST_data_to_NewListForm(self, mockNewListForm):
         new_list2(self.request)
+        # Initialize form by passing it a POST request as data
         mockNewListForm.assert_called_once_with(data=self.request.POST)
 
     def test_saves_form_with_owner_if_form_is_valid(self, mockNewListForm):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = True
         new_list2(self.request)
+        # Form has a .save method which accepts a request.user 
         mock_form.save.assert_called_once_with(owner=self.request.user)
 
     @patch('lists.views.redirect')
@@ -223,6 +224,7 @@ class NewListViewUnitTest(unittest.TestCase):
         response = new_list2(self.request)
 
         self.assertEqual(response, mock_redirect.return_value)
+        # The .save method should return a new list object for our view to redirect the user
         mock_redirect.assert_called_once_with(mock_form.save.return_value)
 
     @patch('lists.views.render')
@@ -244,3 +246,4 @@ class NewListViewUnitTest(unittest.TestCase):
             mock_form.is_valid.return_value = False
             new_list2(self.request)
             self.assertFalse(mock_form.save.called)
+
