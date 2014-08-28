@@ -26,7 +26,7 @@ class SharingTest(FunctionalTest):
 
         # Edith goes to the home page and starts a list
         self.browser = edith_browser
-        list_page = HomePage(self).start_new_list('get help')
+        list_page = HomePage(self).start_new_list('Get help')
 
         # She notices a "Share this list" option
         share_box = list_page.get_share_box()
@@ -38,5 +38,26 @@ class SharingTest(FunctionalTest):
         # She shares her list
         # The page updates to say that its shared with Oni
         list_page.share_list_with('oniciferous@example.com')
+
+        #Oni now goes to the list page with his browser
+        self.browser = oni_browser
+        HomePage(self).go_to_home_page().go_to_my_lists_page()
+
+        # He sees Edith's list there
+        self.browser.find_element_by_link_text('Get help').click()
+
+        # On the list page, Oni can see that its Edith's list
+        self.wait_for(lambda: self.assertEqual(
+            list_page.get_list_owner(),
+            'edith@example.com'
+        ))
+
+        # Oni adds an item to the list
+        list_page.add_new_item('Hi Edith!')
+
+        # When Edith refreshes the page, she sees Oni's addition
+        self.browser = edith_browser
+        self.browser.refresh()
+        list_page.wait_for_new_item_in_list('Hi Edith!', 2)
 
 
