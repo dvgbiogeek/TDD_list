@@ -15,5 +15,6 @@
 {% block extra_content %}
 <form method="POST">
     <input name="email" placeholder="your-friend@example.com">
+    {% csrf_token %}
 </form>
 {% endblock %}
