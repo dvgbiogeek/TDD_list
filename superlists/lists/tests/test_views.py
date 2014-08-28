@@ -8,7 +8,7 @@ from unittest import skip
 from unittest.mock import Mock, patch
 import unittest
 
-from lists.views import home_page, view_list, new_list
+from lists.views import home_page, view_list, new_list, share_list
 from lists.models import Item, List
 from lists.forms import (
     DUPLICATE_ITEM_ERROR, EMPTY_LIST_ERROR,
@@ -257,7 +257,11 @@ class ShareListTest(TestCase):
             '/lists/%d/share' % (list_.id),
             {'email': 'share.with@me.com'} 
         )
+        #import pdb; pdb.set_trace()
+
         self.assertIn(sharee, list_.shared_with.all())
+
+
 
     def test_post_redirects_to_lists_page(self):
         sharee = User.objects.create(email='share.with@me.com')
