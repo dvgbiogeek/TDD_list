@@ -1,13 +1,16 @@
+import sys
+import time
 from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
 from django.contrib.sessions.backends.db import SessionStore
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import WebDriverException
 
-import sys
 
 User = get_user_model()
+DEFAULT_WAIT = 5
 
 
 class FunctionalTest(StaticLiveServerCase):
@@ -73,6 +76,16 @@ class FunctionalTest(StaticLiveServerCase):
             value=session.session_key,
             path='/',
         ))
+
+    def wait_for(self, function_with_assertion, timeout=DEFAULT_WAIT):
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                return function_with_assertion()
+            except (AssertionError, WebDriverException):
+                time.sleep(0.1)
+        # one more try, which will raise any errors is outstanding
+        return function_with_assertion()
 
 if __name__ =='__main__':
     unittest.main(warnings='ignore')
