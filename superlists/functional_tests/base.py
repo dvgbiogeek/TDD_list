@@ -87,8 +87,5 @@ class FunctionalTest(StaticLiveServerCase):
         # one more try, which will raise any errors is outstanding
         return function_with_assertion()
 
-if __name__ =='__main__':
-    unittest.main(warnings='ignore')
-
 
 
