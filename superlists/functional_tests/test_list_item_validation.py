@@ -57,7 +57,7 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.server_url)
         self.get_item_input_box().send_keys('\n')
         error = self.get_error_element()
-        self.assertFalse(error.is_displayed())
+        self.assertTrue(error.is_displayed())
 
         # Typing into the input box clears the error
         self.get_item_input_box().send_keys('a')
